@@ -1,0 +1,59 @@
+<PROJECT_NAME> - Evaluacion de Mejoras Potenciales
+===============================================
+Fecha: <YYYY-MM-DD>
+
+Cada mejora incluye:
+  - Impacto:  Alto / Medio / Bajo (en funcionalidad y calidad)
+  - Esfuerzo: Alto / Medio / Bajo (tiempo/lineas de codigo)
+  - Prioridad recomendada
+  - Que archivos tocar
+  - Dependencias externas (si aplica)
+
+================================================================================
+MEJORA N: <TITLE>
+================================================================================
+
+  Prioridad:    P1/P2/P3
+  Impacto:      Alto / Medio / Bajo
+  Esfuerzo:     Alto / Medio / Bajo
+  Dependencias: <packages or system deps required>
+
+  Descripcion:
+    <detailed explanation of what to implement and why>
+
+  Archivos a modificar:
+    - src/...
+
+  Archivos a crear:
+    - tests/...
+
+  Efecto:
+    - <benefit>
+    - <benefit>
+
+  Riesgos:
+    - <caveat>
+
+================================================================================
+RESUMEN DE PRIORIDADES
+================================================================================
+
+  P1 (CRITICO):
+    N. <mejora>
+  P2 (ALTO):
+    N. <mejora>
+  P3 (MEDIO/BAJO):
+    N. <mejora>
+
+================================================================================
+MATRIZ IMPACTO VS ESFUERZO
+================================================================================
+
+                       ALTO IMPACTO  |  MEDIO IMPACTO  |  BAJO IMPACTO
+  ------------------------------------------------------------------------
+  BAJO ESFUERZO        <P2>          | <P3>            | <P3>
+  MEDIO ESFUERZO       <P1>          | <P3>            |
+                       <P2>          |                 |
+  ALTO ESFUERZO        -             | -               | -
+
+================================================================================
