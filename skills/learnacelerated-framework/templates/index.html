@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>&#x1F9E0; Learnacelerated — Aprendizaje Acelerado con IA</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --bg-card: #1a1d28;
+    --bg-hover: #242838;
+    --border: #2a2e3e;
+    --text: #e1e4ed;
+    --text-dim: #8b90a0;
+    --accent: #6c8cff;
+    --accent-glow: rgba(108,140,255,0.15);
+    --green: #4ade80;
+    --orange: #fb923c;
+    --red: #f87171;
+    --purple: #a78bfa;
+    --radius: 12px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+  header {
+    text-align: center;
+    padding: 40px 20px 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 30px;
+  }
+  header h1 { font-size: 2.4rem; font-weight: 700; letter-spacing: -0.5px; }
+  header h1 span { background: linear-gradient(135deg,var(--accent),var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  header p { color: var(--text-dim); font-size: 1.05rem; margin-top: 8px; }
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .card:hover { border-color: rgba(108,140,255,0.3); }
+  .card h2 { font-size: 1.2rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .card p, .card li { color: var(--text-dim); font-size: 0.95rem; }
+  label { display: block; font-size: 0.9rem; font-weight: 500; margin-bottom: 6px; color: var(--text-dim); }
+  input, textarea, select {
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 0.95rem;
+    font-family: inherit;
+  }
+  input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+  textarea { resize: vertical; min-height: 80px; }
+  .form-group { margin-bottom: 16px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 10px 20px; border-radius: 8px; border: none;
+    font-size: 0.9rem; font-weight: 500; cursor: pointer;
+    transition: all 0.2s; text-decoration: none;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: #5a7ae6; transform: translateY(-1px); }
+  .btn-secondary { background: var(--bg-hover); color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover { border-color: var(--accent); }
+  .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
+  .btn-success { background: var(--green); color: #000; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .module-nav {
+    display: flex; gap: 6px; flex-wrap: wrap;
+    margin-bottom: 24px; padding: 16px;
+    background: var(--bg-card); border-radius: var(--radius);
+    border: 1px solid var(--border);
+  }
+  .module-dot {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; font-weight: 600;
+    background: var(--bg-hover); color: var(--text-dim);
+    border: 2px solid var(--border); cursor: pointer;
+    transition: all 0.2s;
+  }
+  .module-dot.active { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 0 12px var(--accent-glow); }
+  .module-dot.done { background: var(--green); color: #000; border-color: var(--green); }
+  .module-dot:hover { transform: scale(1.1); }
+  .module-content { display: none; }
+  .module-content.active { display: block; }
+  .progress-bar {
+    height: 4px; background: var(--bg-hover); border-radius: 2px;
+    margin-bottom: 24px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: linear-gradient(90deg, var(--accent), var(--purple));
+    border-radius: 2px; transition: width 0.5s ease;
+  }
+  .progress-label { text-align: center; font-size: 0.85rem; color: var(--text-dim); margin-bottom: 8px; }
+  .prompt-box {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 16px; margin: 12px 0;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.85rem; line-height: 1.5; overflow-x: auto;
+    white-space: pre-wrap; word-break: break-word;
+    position: relative;
+  }
+  .prompt-box .copy-btn {
+    position: absolute; top: 8px; right: 8px;
+    background: var(--bg-hover); border: 1px solid var(--border);
+    color: var(--text-dim); padding: 4px 10px; border-radius: 6px;
+    font-size: 0.75rem; cursor: pointer;
+  }
+  .prompt-box .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+  .checklist { list-style: none; padding: 0; }
+  .checklist li {
+    padding: 10px 12px; margin-bottom: 6px;
+    background: var(--bg); border-radius: 8px;
+    display: flex; align-items: flex-start; gap: 10px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .checklist li:hover { background: var(--bg-hover); }
+  .checklist li.checked { opacity: 0.6; text-decoration: line-through; }
+  .checklist li .check { width: 18px; height: 18px; border: 2px solid var(--border); border-radius: 4px; flex-shrink: 0; margin-top: 2px; }
+  .checklist li.checked .check { background: var(--green); border-color: var(--green); display: flex; align-items: center; justify-content: center; }
+  .checklist li.checked .check::after { content: '\u2713'; color: #000; font-weight: bold; font-size: 12px; }
+  .info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 12px 0; }
+  .info-item { background: var(--bg); padding: 14px; border-radius: 8px; border: 1px solid var(--border); }
+  .info-item .label { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
+  .info-item .value { font-size: 1rem; font-weight: 600; margin-top: 4px; }
+  .hidden { display: none !important; }
+  #welcome-screen { text-align: center; padding: 40px 0; }
+  #welcome-screen .hero-icon { font-size: 4rem; margin-bottom: 16px; }
+  #welcome-screen h1 { font-size: 2.6rem; margin-bottom: 12px; }
+  #welcome-screen .subtitle { color: var(--text-dim); font-size: 1.1rem; max-width: 600px; margin: 0 auto 32px; line-height: 1.7; }
+  .feature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin: 32px 0; text-align: left; }
+  .feature-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+  .feature-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .feature-card .icon { font-size: 1.8rem; margin-bottom: 8px; }
+  .feature-card h3 { font-size: 1rem; margin-bottom: 6px; }
+  .feature-card p { font-size: 0.85rem; color: var(--text-dim); }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>&#x1F9E0; <span>Learnacelerated</span></h1>
+  <p>Marco Universal de Aprendizaje Acelerado con IA &mdash; 9 m&oacute;dulos, 20 horas, cualquier tema</p>
+</header>
+<div class="container" id="app">
+
+<div id="welcome-screen">
+  <div class="hero-icon">&#x1F680;</div>
+  <h1>Aprende <span style="background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">cualquier tema</span> en 20 horas</h1>
+  <p class="subtitle">
+    Basado en ciencia cognitiva probada: carga cognitiva, metacognici&oacute;n, dificultades deseables,
+    doble codificaci&oacute;n, repetici&oacute;n espaciada y pr&aacute;ctica deliberada.
+  </p>
+  <div class="feature-grid">
+    <div class="feature-card"><div class="icon">&#x1F3AF;</div><h3>Diagn&oacute;stico Inteligente</h3><p>5 preguntas que revelan tu nivel real</p></div>
+    <div class="feature-card"><div class="icon">&#x1F4CB;</div><h3>Plan 80/20</h3><p>10 bloques de 2h con checkpoints</p></div>
+    <div class="feature-card"><div class="icon">&#x1F5FA;&#xFE0F;</div><h3>Mapa de Una P&aacute;gina</h3><p>Comprensi&oacute;n visual imprimible</p></div>
+    <div class="feature-card"><div class="icon">&#x1FAAE;</div><h3>Escalera de Competencia</h3><p>5 niveles con hitos verificables</p></div>
+    <div class="feature-card"><div class="icon">&#x1F9EA;</div><h3>Transferencia</h3><p>Aplica a 5 contextos diferentes</p></div>
+    <div class="feature-card"><div class="icon">&#x1F4C5;</div><h3>Repetici&oacute;n Espaciada</h3><p>D&iacute;as 1-3-7-14-30-60-90</p></div>
+  </div>
+  <div class="card" style="max-width:600px;margin:0 auto;text-align:left;">
+    <h2>&#x270F;&#xFE0F; Configura tu aprendizaje</h2>
+    <div class="form-group">
+      <label for="topic">&#xBF;Qu&eacute; quieres aprender?</label>
+      <input type="text" id="topic" placeholder="Ej: Python, Pensamiento Estrat&eacute;gico, Finanzas...">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="level">Nivel actual</label>
+        <select id="level">
+          <option value="principiante">Principiante absoluto</option>
+          <option value="basico">Tengo una idea b&aacute;sica</option>
+          <option value="intermedio">Nivel intermedio</option>
+          <option value="avanzado">Nivel avanzado</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="time">Horas por d&iacute;a</label>
+        <select id="time">
+          <option value="0.5">30 min/d&iacute;a</option>
+          <option value="1" selected>1 hora/d&iacute;a</option>
+          <option value="2">2 horas/d&iacute;a</option>
+          <option value="3">3+ horas/d&iacute;a</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="context">Tu contexto</label>
+      <textarea id="context" placeholder="Ej: Soy abogado, quiero aprender Python para automatizar documentos legales."></textarea>
+    </div>
+    <div class="form-group">
+      <label for="goal">Objetivo concreto</label>
+      <input type="text" id="goal" placeholder="Ej: Poder crear scripts que procesen CSV">
+    </div>
+    <button class="btn btn-primary" id="start-btn" style="width:100%;justify-content:center;padding:14px;font-size:1rem;">
+      &#x1F680; Comenzar mi plan de aprendizaje
+    </button>
+  </div>
+</div>
+
+<div id="app-screen" class="hidden">
+  <div class="progress-label" id="progress-label">0 / 9 m&oacute;dulos completados</div>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  <div class="module-nav" id="module-nav"></div>
+  <div id="module-areas"></div>
+</div>
+
+</div>
+
+<script>
+(function() {
+'use strict';
+
+const MODULES = [
+  { id: 0, label: '0', title: 'Diagnostico', icon: '&#x1F50D;' },
+  { id: 1, label: '1', title: 'Plan 80/20', icon: '&#x1F3AF;' },
+  { id: 2, label: '2', title: 'Mapa Visual', icon: '&#x1F5FA;' },
+  { id: 3, label: '3', title: 'Explicacion 3 Capas', icon: '&#x1F9D2;' },
+  { id: 4, label: '4', title: 'Escalera', icon: '&#x1FAAE;' },
+  { id: 5, label: '5', title: 'Anti-Patrones', icon: '&#x26A0;' },
+  { id: 6, label: '6', title: 'Transferencia', icon: '&#x1F9EA;' },
+  { id: 7, label: '7', title: 'Practica', icon: '&#x1F4AA;' },
+  { id: 8, label: '8', title: 'Examen Final', icon: '&#x1F3C6;' }
+];
+
+const CHECKLISTS = {
+  0: ['Respondi las 5 preguntas diagnosticas', 'Identifique mi nivel real', 'Defini mi motivacion concreta', 'Se que estilo de aprendizaje prefiero'],
+  1: ['Copie y personalice el prompt con mi tema', 'Ejecute el prompt en una IA', 'Revise los 10 bloques generados', 'Identifique el calendario de repeticion espaciada', 'Anote los recursos principales'],
+  2: ['Genere el mapa conceptual con IA', 'Identifique las 3-5 ideas madre', 'Puedo explicar las relaciones entre conceptos', 'Conozco los 3 errores comunes y sus antidotos', 'Memorice la frase-ancla'],
+  3: ['Lei la explicacion para nino de 10 anos', 'Lei la explicacion para adulto sin formacion', 'Lei la explicacion para practicante competente', 'Respondi las preguntas de las 3 capas'],
+  4: ['Tengo los 5 niveles definidos para mi tema', 'Se en que nivel estoy actualmente', 'Identifique mi proxima prueba de paso', 'Reconozco mi senal de estancamiento mas probable'],
+  5: ['Identifique los 7 errores comunes', 'Reconozco al menos 3 senales de alerta', 'Entiendo la causa raiz de cada uno', 'Tengo antidotos concretos para mis errores'],
+  6: ['Genere 5 escenarios de transferencia', 'Aplique principios a campos diferentes', 'Identifique al menos un contraejemplo', 'Puedo explicar el principio con una analogia'],
+  7: ['Tengo 10 ejercicios progresivos', 'Complete al menos los 3 primeros ejercicios', 'Use los criterios de exito para autoevaluarme', 'Intente la variacion de al menos 1 ejercicio'],
+  8: ['Complete el examen integrador', 'Respondi las 5 preguntas de comprension', 'Resolvi el estudio de caso', 'Respondi la meta-pregunta y reflexione']
+};
+
+var state = {
+  topic: '', level: '', time: '', context: '', goal: '',
+  currentModule: 0, completed: {}, checks: {}
+};
+
+function save() {
+  try { localStorage.setItem('learnac', JSON.stringify(state)); } catch(e) {}
+}
+function load() {
+  try {
+    var s = localStorage.getItem('learnac');
+    if (s) { state = JSON.parse(s); return true; }
+  } catch(e) {}
+  return false;
+}
+
+function promptFor(id, t, c, l, g) {
+  var ctx = c || '[tu profesion, nivel actual y objetivo]';
+  var goal = g || '[objetivo concreto]';
+  var lvl = l || '[nivel actual]';
+  var prompts = {
+    0: 'Actua como un arquitecto de aprendizaje de clase mundial.\n\nMI CONTEXTO: ' + ctx + '\nTEMA: ' + t + '\nNIVEL: ' + lvl + '\nOBJETIVO: ' + goal + '\n\nAntes de construir el plan de aprendizaje, hazme 5 preguntas diagnosticas que revelen:\n1. Que creo que se sobre ' + t + '\n2. Que modelos mentales incorrectos podria tener\n3. Mi motivacion real\n4. Mi estilo de procesamiento\n5. Mi situacion actual',
+    1: 'Actua como un arquitecto de aprendizaje que combina ciencia cognitiva, pedagogia, y experiencia practica en ' + t + '.\n\nMI CONTEXTO: ' + ctx + '\nNIVEL: ' + lvl + '\nOBJETIVO: ' + goal + '\n\nConstruye un plan de 20 horas en 10 bloques de 2 horas.\nCada bloque: OBJETIVO MICRO, 20/80, RECURSO, PRACTICA ACTIVA, CHECK RETENCION, CONEXION FORWARD.\nIncluye calendario de repeticion espaciada D1,3,7,14,30,60,90.',
+    2: 'Comprime ' + t + ' en un mapa conceptual:\n- 3-5 ideas madre\n- Sub-conceptos con relaciones\n- Ejemplo REAL cada uno\n- 3 errores comunes + antidoto\n- Frase-ancla',
+    3: 'Explica ' + t + ' en 3 capas:\nCAPA 1: nino 10 anos, analogias, cero jerga\nCAPA 2: adulto sin formacion, vocabulario con contexto\nCAPA 3: practicante, tensiones y debates\n2 preguntas por capa.',
+    4: 'Mapa ' + t + ' en 5 niveles con hitos verificables.\nCada nivel: nombre, demostracion, estudio, tiempo, prueba de paso, senal de estancamiento.',
+    5: '7 errores de principiantes en ' + t + '.\nCada uno: nombre, senal, causa raiz, costo, antidoto, ejemplo.',
+    6: '5 escenarios de transferencia para ' + t + ' a campos distintos. Incluye 1 contraejemplo.',
+    7: '10 ejercicios progresivos para ' + t + '.\nCada uno: dificultad 1-10, habilidad, tiempo, criterio de exito, variacion.',
+    8: 'Evaluacion final de ' + t + ':\n5 preguntas profundas, 1 caso de estudio, 1 abogado del diablo, 1 meta-pregunta, rubrica.'
+  };
+  return prompts[id] || '';
+}
+
+function renderNav() {
+  var nav = document.getElementById('module-nav');
+  nav.innerHTML = MODULES.map(function(m) {
+    var cls = 'module-dot';
+    if (state.currentModule === m.id) cls += ' active';
+    if (state.completed[m.id]) cls += ' done';
+    return '<div class="' + cls + '" data-m="' + m.id + '" onclick="window._show(' + m.id + ')">' + m.label + '</div>';
+  }).join('');
+}
+
+function renderModules() {
+  var container = document.getElementById('module-areas');
+  var html = '';
+  MODULES.forEach(function(m) {
+    html += '<div class="module-content' + (state.currentModule === m.id ? ' active' : '') + '" id="mod-' + m.id + '">';
+    html += renderBy(m.id);
+    html += '</div>';
+  });
+  container.innerHTML = html;
+  initChecks();
+}
+
+function renderBy(id) {
+  var t = state.topic || '[TEMA]';
+  var c = state.context || '';
+  var l = state.level || '';
+  var g = state.goal || '';
+  var prompt = promptFor(id, t, c, l, g);
+  var descs = ['', '', '', '', '', '', '', '', ''];
+  descs[0] = 'Responde las 5 preguntas diagnosticas.';
+  descs[1] = '20 horas. 10 bloques. El 20% que da el 80%.';
+  descs[2] = 'Doble codificacion: palabras + imagenes = 65% retencion.';
+  descs[3] = 'Un concepto, 3 niveles. La IA se adapta a ti.';
+  descs[4] = '5 niveles con hitos y senales de estancamiento.';
+  descs[5] = 'Los 7 errores que mas tiempo cuestan.';
+  descs[6] = '5 contextos distintos + 1 contraejemplo.';
+  descs[7] = '10 ejercicios. Basado en Ericsson.';
+  descs[8] = 'Preguntas profundas, caso, meta-pregunta.';
+
+  var h = '';
+  h += '<div class="card"><h2>' + MODULES[id].icon + ' Modulo ' + id + ': ' + MODULES[id].title + '</h2><p>' + descs[id] + '</p></div>';
+  h += '<div class="card"><h2>Prompt</h2><div class="prompt-box" id="pb-' + id + '">';
+  h += '<button class="copy-btn" onclick="window._copy(' + id + ')">Copiar prompt</button>';
+  h += prompt.replace(/\n/g, '<br>') + '</div></div>';
+
+  if (id === 1) {
+    h += '<div class="info-grid">';
+    [['Tema', t], ['Nivel', l], ['Horas/dia', state.time || '1'], ['Objetivo', g || '&mdash;']].forEach(function(i) {
+      h += '<div class="info-item"><div class="label">' + i[0] + '</div><div class="value">' + i[1] + '</div></div>';
+    });
+    h += '</div>';
+  }
+
+  h += '<div class="card"><h2>Checklist</h2><ul class="checklist" id="cl-' + id + '">';
+  (CHECKLISTS[id] || []).forEach(function(item) {
+    var done = (state.checks['m' + id] || []).indexOf(item) > -1;
+    h += '<li class="' + (done ? 'checked' : '') + '" onclick="window._toggle(' + id + ',this)" data-item="' + item.replace(/'/g, '&apos;') + '">';
+    h += '<span class="check"></span><span>' + item + '</span></li>';
+  });
+  h += '</ul></div>';
+
+  if (id === 8) {
+    h += '<div class="card" style="border-color:var(--accent);"><h2>Felicidades!</h2><p>Usa el calendario de repeticion espaciada D1,3,7,14,30,60,90.</p><p style="color:var(--green);font-weight:600;">Ahora eres un aprendiz autonomo</p></div>';
+  }
+  return h;
+}
+
+function initChecks() {
+  MODULES.forEach(function(m) {
+    var done = state.checks['m' + m.id] || [];
+    if (done.length === 0) return;
+    var ul = document.getElementById('cl-' + m.id);
+    if (!ul) return;
+    ul.querySelectorAll('li').forEach(function(li) {
+      if (done.indexOf(li.getAttribute('data-item') || li.textContent.trim()) > -1) li.classList.add('checked');
+    });
+  });
+  updateProgress();
+}
+
+function startLearning() {
+  var topic = document.getElementById('topic').value.trim();
+  if (!topic) { document.getElementById('topic').focus(); return; }
+  state.topic = topic;
+  state.level = document.getElementById('level').value;
+  state.time = document.getElementById('time').value;
+  state.context = document.getElementById('context').value.trim();
+  state.goal = document.getElementById('goal').value.trim();
+  state.currentModule = 0;
+  state.completed = {};
+  state.checks = {};
+  showView('app');
+  renderNav();
+  renderModules();
+  save();
+}
+
+function showView(v) {
+  document.getElementById('welcome-screen').classList.toggle('hidden', v !== 'welcome');
+  document.getElementById('app-screen').classList.toggle('hidden', v !== 'app');
+}
+
+function showModule(idx) {
+  state.currentModule = idx;
+  renderNav();
+  document.querySelectorAll('.module-content').forEach(function(el) { el.classList.remove('active'); });
+  var el = document.getElementById('mod-' + idx);
+  if (el) el.classList.add('active');
+  var areas = document.getElementById('module-areas');
+  if (areas) areas.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  save();
+}
+
+function toggleItem(mId, li) {
+  var txt = li.getAttribute('data-item') || li.textContent.trim();
+  var key = 'm' + mId;
+  if (!state.checks[key]) state.checks[key] = [];
+  var done = state.checks[key];
+  var idx = done.indexOf(txt);
+  if (idx > -1) { done.splice(idx, 1); li.classList.remove('checked'); }
+  else { done.push(txt); li.classList.add('checked'); }
+  var ul = document.getElementById('cl-' + mId);
+  if (ul) {
+    if (ul.querySelectorAll('li').length > 0 && ul.querySelectorAll('li.checked').length >= ul.querySelectorAll('li').length) {
+      state.completed[mId] = true;
+    } else {
+      delete state.completed[mId];
+    }
+    renderNav();
+    updateProgress();
+    save();
+  }
+}
+
+function updateProgress() {
+  var done = Object.keys(state.completed).length;
+  var pct = Math.round((done / MODULES.length) * 100);
+  var fill = document.getElementById('progress-fill');
+  var label = document.getElementById('progress-label');
+  if (fill) fill.style.width = pct + '%';
+  if (label) label.textContent = done + ' / ' + MODULES.length + ' modulos completados';
+}
+
+function copyPrompt(id) {
+  var t = state.topic || '[TEMA]';
+  var c = state.context || '';
+  var l = state.level || '';
+  var g = state.goal || '';
+  navigator.clipboard.writeText(promptFor(id, t, c, l, g)).then(function() {
+    var btn = document.querySelector('#pb-' + id + ' .copy-btn');
+    if (btn) { btn.textContent = 'Copiado!'; setTimeout(function() { btn.textContent = 'Copiar prompt'; }, 2000); }
+  });
+}
+
+window._show = showModule;
+window._toggle = toggleItem;
+window._copy = copyPrompt;
+
+document.addEventListener('DOMContentLoaded', function() {
+  if (load() && state.topic) {
+    showView('app');
+    renderNav();
+    renderModules();
+    showModule(state.currentModule || 0);
+    updateProgress();
+  } else {
+    showView('welcome');
+  }
+  document.getElementById('start-btn').addEventListener('click', startLearning);
+  document.getElementById('topic').addEventListener('keydown', function(e) { if (e.key === 'Enter') startLearning(); });
+});
+
+})();
+</script>
+</body>
+</html>
