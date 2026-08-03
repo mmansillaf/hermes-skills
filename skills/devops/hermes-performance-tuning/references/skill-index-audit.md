@@ -41,7 +41,7 @@ All had `created_by: (none)` → curator will NOT touch them (curator only manag
 |---|---|---|
 | MCP | mcp-server-authoring, mcp-server-development, native-mcp, mcporter | 3-15KB |
 | Peru scraping (CEJ/TC) | cej-peru-scraper, peruvian-judicial-scraping, cej-mcp-server, tc-sedetc-scraper, tc-ingesta-lexrag, tc-searchrag | 7-68KB |
-| Paywall/login | bypass-paywall, bypass-login-wall, paywall-bypass | 5-20KB |
+| Paywall/login | bypass-paywall, bypass-login-wall | 5-20KB |
 | Protocol forensics | crypto-protocol-analysis, anonymization-protocol-analysis, network-protocol-analysis, p2p-messaging-forensics, whatsapp-desanonimizacion-stack | 8-11KB |
 | Statistics | scientific-statistical-engine, statistical-formula-engine, statistics-vs-ml-decision, method-selector, time-series-forecasting | 4-19KB |
 
