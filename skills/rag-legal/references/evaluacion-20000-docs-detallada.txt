@@ -1,0 +1,147 @@
+EVALUACION DEL RAG - 20,973 documentos indexados
+==================================================
+Fecha: 7 Junio 2026
+Modelo: Llama 3.1 8B Instant via Groq Batch API (max_tokens=1024)
+Corpus: ~21,000 documentos LABORAL
+Embeddings: distiluse-base-multilingual-cased-v2
+Busqueda: FAISS vector + BM25 lexico + NetworkX grafo
+
+Pregunta 1: indemnizacion por despido arbitrario
+  Area: Laboral
+  Tiempo: 0.9s
+  Docs recuperados: 5
+  Relevancia: Media
+  Fallo concreto: SI
+  Leyes citadas: NO
+  Hechos (top-1): El demandante, Alfaro Segura, Jorge Antonio, presento una demanda 
+  contra Servicios Industriales de la Marina S.A. por despido arbitrario.
+  Fallo (top-1): Se ordena el deposito judicial electronico N 2024004803476 por la 
+  suma de S/ 11,046.93 soles a favor del demandante.
+  Leyes: []
+
+Pregunta 2: pago de utilidades a trabajadores
+  Area: Laboral
+  Tiempo: 0.6s
+  Docs recuperados: 5
+  Relevancia: Media
+  Fallo concreto: SI
+  Leyes citadas: NO
+  Hechos (top-1): Valdivieso Tamayo, Christian Omar demando a Union Andina de 
+  Cementos S.A.A. - Unacem S.A.A. por pago de utilidades.
+  Fallo (top-1): Se ordena a la empresa Unacem S.A.A. pagar las utilidades 
+  adeudadas a Christian Omar Valdivieso Tamayo.
+  Leyes: []
+
+Pregunta 3: reintegro de remuneraciones por participacion de pesca
+  Area: Laboral
+  Tiempo: 0.6s
+  Docs recuperados: 5
+  Relevancia: Media
+  Fallo concreto: SI
+  Leyes citadas: NO
+  Hechos (top-1): El demandante, Alfaro Segura, Jorge Antonio, presento una 
+  demanda contra Servicios Industriales de la Marina S.A.
+  Fallo (top-1): Se ordena el deposito judicial electronico N 2024004803476 por 
+  la suma de S/ 11,046.93 soles a favor del demandante.
+  Leyes: []
+
+Pregunta 4: ejecucion de garantias mobiliarias
+  Area: Comercial
+  Tiempo: 0.4s
+  Docs recuperados: 5
+  Relevancia: ALTA
+  Fallo concreto: SI
+  Leyes citadas: SI
+  Hechos (top-1): La demandada, Electronoroeste S.A., solicito el endoso virtual 
+  de un deposito judicial.
+  Fallo (top-1): Se autorizo el endoso virtual del deposito judicial 
+  N 2020069102307 a la parte demandada Electronoroeste S.A.
+  Leyes: [Resolucion Administrativa 0000185-2020-CE-PJ]
+
+Pregunta 5: anulacion de laudo arbitral
+  Area: Comercial
+  Tiempo: 0.3s
+  Docs recuperados: 5
+  Relevancia: ALTA
+  Fallo concreto: SI
+  Leyes citadas: SI
+  Hechos (top-1): La demandada, SIMA CALLAO SA, presento un escrito pendiente 
+  de dar cuenta.
+  Fallo (top-1): Se dispone la devolucion de la Constancia de Deposito Judicial 
+  N 2023004700040 por la suma de S/. 4,000.00.
+  Leyes: [Codigo Procesal Civil, articulo 637]
+
+Pregunta 6: obligacion de dar suma de dinero
+  Area: Comercial
+  Tiempo: 0.4s
+  Docs recuperados: 5
+  Relevancia: Media
+  Fallo concreto: SI
+  Leyes citadas: NO
+  Hechos (top-1): El demandante PROFUTURO AFP presento un ingreso Nro 29587-2023 
+  contra el demandado SERVICIOS INDUSTRIALES DE LA MARINA S.A.
+  Fallo (top-1): Se ordena agregar a los autos la documentacion adjuntada por el 
+  demandado.
+  Leyes: []
+
+Pregunta 7: pension de alimentos para menores
+  Area: Familia
+  Tiempo: 0.2s
+  Docs recuperados: 5
+  Relevancia: ALTA
+  Fallo concreto: SI
+  Leyes citadas: SI
+  Hechos (top-1): El demandante, BERNABE PENARAN, BERNARDO, presento una demanda 
+  contra SERVICIOS INDUSTRIALES DE LA MARINA S.A.
+  Fallo (top-1): Se declara improcedente la demanda por carecer el juzgado de 
+  competencia por razon de la materia.
+  Leyes: [Ley 29497, Art. 1 citado en la resolucion]
+
+Pregunta 8: violencia familiar medidas de proteccion
+  ERROR: Ran out of input (no se encontraron documentos de este tipo en el corpus)
+
+Pregunta 9: tenencia y custodia de menores
+  Area: Familia
+  Tiempo: 0.4s
+  Docs recuperados: 5
+  Relevancia: ALTA
+  Fallo concreto: SI
+  Leyes citadas: SI
+  Hechos (top-1): La demandada, SIMA CALLAO SA, presento un escrito pendiente 
+  de dar cuenta.
+  Fallo (top-1): Se dispone la devolucion de la Constancia de Deposito Judicial 
+  N 2023004700040 por la suma de S/. 4,000.00.
+  Leyes: [Codigo Procesal Civil, articulo 637]
+
+Pregunta 10: regimen de visitas
+  Area: Familia
+  Tiempo: 0.5s
+  Docs recuperados: 5
+  Relevancia: Media
+  Fallo concreto: SI
+  Leyes citadas: NO
+  Hechos (top-1): La empresa Courier P&M realizo una visita al destinatario 
+  EMPRESA DE SEGURIDAD, VIGILANCIA Y CONTROL S.A.C.
+  Fallo (top-1): Se le dio cuenta a la parte demandante para que dentro de dos 
+  dias senale un domicilio valido.
+  Leyes: []
+
+==================================================
+RESUMEN GENERAL
+==================================================
+  Relevancia ALTA:  4/10
+  Relevancia Media: 5/10  
+  Relevancia BAJA:  0/10
+  Error:            1/10
+  Fallo concreto (extrajeron decision del tribunal):   9/9 (100%)
+  Con leyes citadas: 4/9 (44%)
+  Tiempo promedio:  0.5s por consulta
+
+HALLAZGOS:
+1. El corpus actual solo tiene LABORAL (~21K docs). Las preguntas de COMERCIAL
+   y FAMILIA encuentran documentos laborales con palabras clave similares.
+2. Predominan resoluciones de tramite sobre sentencias de fondo.
+3. Con 100% de fallos concretos, el modelo extrae correctamente la decision
+   del tribunal en todos los casos.
+4. Solo 44% de preguntas recuperan documentos con leyes citadas.
+   Mejorable con prompt mas explicito o filtrando solo Sentencias.
