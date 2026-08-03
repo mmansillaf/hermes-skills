@@ -12,7 +12,7 @@ bump: 2026-07-30 — initial creation from InvestigacionPerfilAuto material
 metadata:
   hermes:
     tags: [research, apex, framework, cognitive, epistemology, benchmark, red-team]
-    related_skills: [web-deep-research, research-synthesis, document-audit, market-intelligence]
+    related_skills: [competitive-research-ai-projects, research-synthesis-html-preview, web-search-tools]
 triggers:
   - investigacion profunda
   - deep dive investigacion
@@ -36,13 +36,20 @@ triggers:
 > Combina los 11 archivos de InvestigacionPerfilAuto en un sistema operativo unificado.
 > Diseñado para producir benchmarks que resistan el escrutinio del 0.01% intelectual global.
 
+NOTA DE INSTALACIÓN (Hermes local): la skill compañera `web-deep-research` (ejecución) NO está
+publicada en el repo mmansillaf/hermes-skills. Adaptar la EJECUCIÓN con las herramientas de
+investigación ya instaladas: `competitive-research-ai-projects` (GitHub/Serper/arXiv/ejecución
+API multi-fuente), web_search/web_extract del toolset `web`, y `research-synthesis-html-preview`
+(producción HTML).
+
 ## ¿Qué resuelve?
 
-Este skill NO reemplaza a `web-deep-research` (ejecución) ni a `research-synthesis` (producción).
+Este skill NO reemplaza a la ejecución (herramientas de búsqueda) ni a `research-synthesis` (producción).
 **Define cómo piensa, planea y valida el investigador** — la capa estratégica antes y durante la ejecución.
 
 Usarlo es automático: cuando pidas una investigación profunda, lo cargo junto con
-`web-deep-research` y `research-synthesis` para cubrir estrategia + ejecución + producción.
+`competitive-research-ai-projects` (ejecución) y `research-synthesis-html-preview` (producción)
+para cubrir estrategia + ejecución + producción.
 
 ---
 
@@ -73,6 +80,11 @@ Usarlo es automático: cuando pidas una investigación profunda, lo cargo junto 
 
 ## 2. PROTOCOLO HEXACAPA (Framework Metodológico Maestro)
 
+> **MODO SESIÓN (por defecto en Hermes):** los plazos originales (días 2-14) son para
+> investigaciones intensivas multi-día. En una sesión normal de 30-90 min, comprime cada
+> capa a su esencia operativa (ver sección 2.7 "Sesión Comprimida"). La metodología completa
+> se mantiene para investigaciones de élite de larga duración que lo exijan.
+
 6 capas que se ejecutan SIMULTÁNEAMENTE, no secuencialmente:
 
 ```
@@ -89,40 +101,62 @@ CAPA 2: TRIANGULACIÓN MULTI-FUENTE Y MULTI-MÉTODO
 CAPA 1: RECONOCIMIENTO INICIAL Y DELIMITACIÓN DEL TERRITORIO
 ```
 
-### Capa 1 — Reconocimiento (Horas 0-2)
-- 15-20 queries simultáneas en motores diferentes (Scholar, Semantic Scholar, Scopus, arXiv, SSRN, PubMed)
-- Identificar 20 investigadores más citados, 10 grupos activos, 5 revistas top, 3 conferencias
+### Capa 1 — Reconocimiento (Sesión: primeras 15-20 min)
+- 15-20 queries simultáneas en motores diferentes — en Hermes: batch de web_search + competitive-research-ai-projects (GitHub API para actores/código, Serper para comercial, arXiv para papers)
+- Identificar 20 investigadores más citados, 10 grupos activos, 5 revistas top, 3 conferencias (modo sesión: los 3-5 repos/papers/labs más relevantes)
 - Detectar controversias activas (Twitter académico, blogs, Letters to Editor)
 - **Output:** Mapa del terreno + palabras clave + actores clave
 
-### Capa 2 — Triangulación (Horas 2-8)
+### Capa 2 — Triangulación (Sesión: 20-30 min)
 - Regla de las 3 fuentes independientes con metodologías diferentes
 - Jerarquía de evidencia: Meta-análisis > RCTs > observacionales > preprints > informes > periodismo > opinión
 - Verificar cadena de custodia del dato (DOI exacto, página, tabla, nota al pie)
 - Cross-check temporal: ¿el dato sigue vigente? ¿retractado? ¿superado?
+- En Hermes: web_extract de al menos 2 fuentes independientes por afirmación clave
 
-### Capa 3 — Mapeo Horizontal (Días 1-3)
+### Capa 3 — Mapeo Horizontal (Sesión: 10-15 min)
 - Analizar el campo completo: sub-áreas, escuelas de pensamiento, intersecciones
 - Analogía transdominio forzada: ¿cómo abordaría esto biólogo, físico, economista, filósofo?
 - Gap analysis: ¿qué NO se ha investigado? ¿qué preguntas nadie hace?
 - Output: Mapa conceptual del campo con conexiones entre sub-áreas
 
-### Capa 4 — Profundización Vertical (Días 2-7)
+### Capa 4 — Profundización Vertical (Sesión: 15-20 min)
 - Técnica de "5 Porqués Académico": cada afirmación → mecanismo → asunción → ¿y si es falsa? → ¿quién se beneficia?
 - Lectura de primera fuente: paper original, dataset crudo, código fuente
 - Análisis de metodología: tamaño muestral, poder estadístico, preregistro, conflictos de interés
-- Descargar supplementary materials, apéndices técnicos, códigos en GitHub/Zenodo
+- En Hermes: web_extract del HTML/README clave, profundizar en las 2-3 discoveries más novedosas
 
-### Capa 5 — Validación Adversarial (Días 3-10)
-- Dedicar 40% del tiempo a buscar evidencia que REFUTE la hipótesis
-- Contactar a 3-5 expertos mundiales con preguntas específicas
+### Capa 5 — Validación Adversarial (Sesión: 10-15 min)
+- Dedicar ~20% del tiempo (modo sesión) a buscar evidencia que REFUTE la hipótesis; en modo élite 40%
+- Red teaming completo: ver sección 6. En sesión, aplicar al menos el software "El Fiscal" para las 3 afirmaciones principales
+- Contactar a 3-5 expertos mundiales con preguntas específicas (solo modo élite multi-día)
 - Simular peer review nivel Nature: 3 revisores imaginarios (técnico obsesivo, escéptico metodológico, pensador de sistemas)
 
-### Capa 6 — Síntesis y Producción (Días 5-14)
+### Capa 6 — Síntesis y Producción (Sesión: cierre)
 - Framework piramidal (Minto): conclusión primero, argumentos, evidencia, metodología
 - Visualización de datos nivel publicación (ggplot2/D3.js/matplotlib calidad Nature)
-- Entregable multinivel: paper técnico (40pp) + executive summary (3pp) + presentación (20 slides) + dataset abierto
+- Entregable multinivel: paper técnico + executive summary + presentación + dataset abierto
+  - Modo sesión: ejecutar `research-synthesis-html-preview` (INFORME_CONSOLIDADO.md + preview HTML)
+  - Modo élite: paper técnico + executive summary (3pp) + presentación (20 slides) + dataset
 - BLUF (Bottom-Line Up Front): respuesta + probabilidad + recomendación en primeros 30 segundos
+
+### 2.7 Sesión Comprimida (modo práctico Hermes)
+
+**Mapa capa → herramienta real.** Este es el acople operativo para una sesión normal (30-90 min).
+Cargar junto: `competitive-research-ai-projects` (ejecución API) + `research-synthesis-html-preview` (producción).
+
+| Capa HEXACAPA | Herramientas Hermes | Acción concreta |
+|---|---|---|
+| 1. Reconocimiento | web_search (batch 4-6), competitive-research Step1 (GitHub multi-query), Step4 (Serper) | Lanzar 15-20 queries en paralelo, deduplicar, mapear actores |
+| 2. Triangulación | web_extract (2+ fuentes por afirmación), competitive-research Step3 (README) | Verificar cada dato clave contra ≥2 fuentes independientes |
+| 3. Mapeo Horizontal | competitive-research Step6 (categorizar OS/comercial/paper) | Clasificar resultados en landscape |
+| 4. Profundización | web_extract (HTML/README), delegate_task (si hay dominios independientes) | Drill-down a las 2-3 discoveries más novedosas |
+| 5. Validación Adversarial | "El Fiscal" (sección 6) sobre las 3 afirmaciones principales | Buscar evidencia que refute + steelmanning |
+| 6. Producción | research-synthesis-html-preview | INFORME_CONSOLIDADO.md + preview HTML |
+
+**GitHub specific (modo sesión):** cuando el tema involucra repos/código, revisar también
+`competitive-research-ai-projects` Step 3 (README de top-N). El rate limit sube a 5000 req/h
+si se usa el token de `~/Escritorio/PyCode/env.md` (ver esa skill).
 
 ---
 
@@ -310,7 +344,7 @@ Objetivo: calibrar → si sistemáticamente asignas 90% a cosas que aciertas 70%
 
 ## 8. FLUJO DE TRABAJO INTEGRADO: ACTIVACIÓN
 
-Cuando se activa este skill (junto con web-deep-research y research-synthesis):
+Cuando se activa este skill (junto con ejecución y producción):
 
 ```
 FASE 0: PLANIFICACIÓN
@@ -318,8 +352,10 @@ FASE 0: PLANIFICACIÓN
   └─ Presentar plan al usuario con dimensiones, queries, marco temporal
 
 FASE 1: EJECUCIÓN
-  └─ web-deep-research: búsqueda multi-ángulo, APIs académicas, YouTube, GitHub
-  └─ Capas 1-4 del HEXACAPA simultáneamente
+  └─ competitive-research-ai-projects: búsqueda multi-ángulo, APIs académicas, GitHub
+  └─ web_search/web_extract: fuentes web, papers, blogs (toolset `web`)
+  └─ GitHub: token en ~/Escritorio/PyCode/env.md (5000 req/h) si el tema involucra repos
+  └─ Capas 1-4 del HEXACAPA simultáneamente (modo sesión: ver sección 2.7)
 
 FASE 2: VALIDACIÓN
   └─ Red teaming epistémico (protocolo "El Fiscal")
@@ -327,10 +363,10 @@ FASE 2: VALIDACIÓN
   └─ Si score < 8/15 → más búsqueda
 
 FASE 3: PRODUCCIÓN
-  └─ research-synthesis con benchmarks de élite
+  └─ research-synthesis-html-preview con benchmarks de élite
   └─ Test triple Musk+Simons+Nobel
   └─ Matriz de escenarios
-  └─ BLUF + formato dual .md + .txt
+  └─ BLUF + formato dual .md + .html
 ```
 
 ---
@@ -341,5 +377,6 @@ FASE 3: PRODUCCIÓN
 2. **Red teaming sin genuino esfuerzo**: Dedicar 30 min a refutar no es suficiente. El protocolo exige 2h+ de búsqueda activa de contradicciones.
 3. **Benchmark sin checklist**: El checklist de 50+ items es el estándar — omitirlo degrada la calidad de "élite" a "aceptable".
 4. **Saturación prematura**: Si cumples <8/15 items del checklist de saturación, el tema no está agotado.
-5. **Confundir herramienta con método**: El PERFIL del investigador (este skill) define el método. web-deep-research define las herramientas. Ambos son necesarios.
+5. **Confundir herramienta con método**: La estrategia (este skill) define el método. La ejecución define las herramientas. Ambos son necesarios.
 6. **No documentar la calibración**: Sin registro de predicciones, no puedes mejorar tu calibración epistémica.
+7. **Las skills compañeras web-deep-research / document-audit / market-intelligence no están en el repo local**: usar competitive-research-ai-projects + toolset web como ejecución.
