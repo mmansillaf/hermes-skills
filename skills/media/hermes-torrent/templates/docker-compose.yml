@@ -1,0 +1,78 @@
+# docker-compose.yml for Hermes Torrent Stack
+# Copy this file, edit the .env with your VPN credentials, then:
+#   docker compose up -d
+# Verify VPN isolation:
+#   docker compose exec qbittorrent curl -s ifconfig.me  # must show VPN IP
+---
+version: "3.8"
+
+services:
+  # ── VPN Container (Kill Switch) ─────────────────────────────────
+  gluetun:
+    image: qmcgaw/gluetun:latest
+    container_name: hermes_vpn
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - VPN_SERVICE_PROVIDER=${VPN_PROVIDER:-mullvad}
+      - VPN_TYPE=${VPN_TYPE:-wireguard}
+      - WIREGUARD_PRIVATE_KEY=${WG_KEY:?Debes configurar WG_KEY en .env}
+      - SERVER_COUNTRIES=${VPN_COUNTRY:-Sweden}
+      - DNS_PLAINTEXT_ADDRESS=${DNS_ADDR:-1.1.1.1}
+      - FIREWALL_VPN_INPUT_PORTS=8080,9696
+      - FIREWALL_OUTBOUND_SUBNETS=${LAN_SUBNET:-192.168.0.0/16}
+    ports:
+      - "127.0.0.1:8080:8080"   # qBittorrent WebUI (localhost only)
+      - "127.0.0.1:9696:9696"   # Prowlarr (localhost only)
+    volumes:
+      - ./gluetun:/gluetun
+    restart: unless-stopped
+
+  # ── Cliente BitTorrent ─────────────────────────────────────────
+  qbittorrent:
+    image: linuxserver/qbittorrent:latest
+    container_name: hermes_torrent
+    network_mode: "service:gluetun"   # ← CRITICO: trafico P2P por VPN
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - TZ=${TZ:-America/Lima}
+      - WEBUI_PORT=8080
+      - UMASK=022
+    volumes:
+      - ./qbittorrent/config:/config
+      - ./downloads:/downloads
+      - ./quarantine:/downloads/quarantine
+    depends_on:
+      gluetun:
+        condition: service_started
+    restart: unless-stopped
+
+  # ── Gestor de Indexadores ──────────────────────────────────────
+  prowlarr:
+    image: linuxserver/prowlarr:latest
+    container_name: hermes_indexer
+    network_mode: "service:gluetun"
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - TZ=${TZ:-America/Lima}
+    volumes:
+      - ./prowlarr/config:/config
+    depends_on:
+      gluetun:
+        condition: service_started
+    restart: unless-stopped
+
+  # ── Antivirus (escaneo post-descarga) ──────────────────────────
+  clamav:
+    image: clamav/clamav:latest
+    container_name: hermes_antivirus
+    network_mode: bridge
+    volumes:
+      - ./downloads:/scan:ro
+      - ./quarantine:/quarantine:ro
+    environment:
+      - CLAMAV_NO_FRESHCLAMD=true
+    command: ["freshclam", "-d", "--stdout"]
+    restart: unless-stopped

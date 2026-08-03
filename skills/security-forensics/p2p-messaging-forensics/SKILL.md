@@ -241,15 +241,113 @@ tshark -r file.pcap -T fields -e frame.time_epoch \
 | **IP Tracking** | All | Any observer | Low | High — links real IP to messaging account |
 | **WebRTC IP Leak** | Telegram/WhatsApp Web | WebRTC peer | Medium | High — leaks real IP in P2P calls |
 
+## Cryptographic Primitives (absorbido de crypto-protocol-analysis)
+
+### Noise Protocol Framework (WhatsApp's Transport)
+
+WhatsApp uses Noise Pipes with the XX pattern:
+
+```
+Noise XX Pattern:
+  → e
+  ← e, ee, s, es
+  → s, se
+  Where: e=ephemeral key, s=static key, ee=ECDH(e,e), es=ECDH(e,s), se=ECDH(s,e)
+```
+
+**Metadata leaked in Noise handshake:** ephemeral public keys (unique per session → de-anonymization risk), static public key hashes (long-term identity), ciphertext length, handshake timing (device/network fingerprint).
+
+### X3DH — Extended Triple Diffie-Hellman (Signal/WhatsApp)
+
+```
+DH1 = ECDH(IK_A, SPK_B)   DH2 = ECDH(EK_A, IK_B)
+DH3 = ECDH(EK_A, SPK_B)   DH4 = ECDH(EK_A, OPK_B)  # optional
+SK  = KDF(DH1 || DH2 || DH3 || DH4)
+```
+
+**THE SERVER KNOWS WHO IS TALKING TO WHOM** (despite E2E):
+- Pre-key server holds IK + SPK + OPK pool of all users → can count users, map IK→phone#
+- Sender sends IK_A + EK_A + which PreKeys used → server infers recipient
+- De-anonymization vectors: PreKey retrieval timing, message delivery timing, identity key rotation, Sealed Sender (hides sender from server, but not metadata)
+
+### Double Ratchet — Timing Side-Channel
+
+- Root/Sending/Receiving chain ratchets; each message = one chain step
+- **Side-channel:** out-of-order delivery forces a DH computation (~1ms) vs normal symmetric decrypt (~1μs) → an observer can detect out-of-order delivery and message counts
+- Deleted messages still advance the ratchet (hole)
+
+Full measurement script in `references/side-channel-timing.md`.
+
+### TLS 1.3 Fingerprinting
+
+```bash
+# Extract version + cipher suites
+tshark -r pcap.pcap -Y "tls.handshake.type == 1" -T fields \
+  -e tls.handshake.version -e tls.handshake.ciphersuite | sort -u
+# JA3-style fingerprint via scapy — parse ClientHello (0x16 marker) for
+# version, session id len, cipher suites
+```
+
+## Stack Setup — Multi-Machine Forensic Environment (absorbido de whatsapp-desanonimizacion-stack)
+
+### Prerequisites
+
+```bash
+sudo apt install tshark tcpdump nmap masscan binwalk foremost yara
+pip install scapy dpkt colorama cryptography
+```
+
+### Why a real Ubuntu box (not WSL)
+
+WSL **cannot capture raw packets** (no libpcap access to physical interfaces) and kills processes after 300s (Rust builds, FAISS). Deploy to P53 (192.168.18.80, 46GB RAM, Quadro T1000):
+
+| Capability | WSL | Real Ubuntu |
+|------------|-----|-------------|
+| Raw packet capture | ❌ | ✅ tcpdump |
+| GPU acceleration | ❌ | ✅ CUDA |
+| Long Rust builds | ❌ times out | ✅ nohup background |
+| mitmproxy interception | ❌ | ✅ |
+
+Deploy one-command: `SSH_PASS='password' bash scripts/deploy-to-remote.sh usuario@192.168.18.80` (see `references/p53-deployment-guide.md`).
+
+### Live capture on P53
+
+```bash
+sshpass -p 'PASS' ssh usuario@192.168.18.80 "
+echo 'PASS' | sudo -S timeout 30 tcpdump -i wlp82s0 \
+  -w ~/whatsapp-analysis/capturas/whatsapp_live.pcap \
+  'port 53 or port 443 or port 80 or port 5222'
+"
+# Then: tshark -q -z io,phs | dns.qry.name | SNI | ip_hosts
+```
+
+### Expected observations (WhatsApp Web capture)
+
+| Observation | Reveals | Severity |
+|-------------|---------|----------|
+| DNS: `web.whatsapp.com` / `web.whatsapp.net` | App in use / WebSocket endpoint | 🔴 Plaintext |
+| SNI: `*.fbcdn.net` / `*.whatsapp.net` | Meta CDN / WhatsApp servers | 🟡 Visible |
+| Packet bursts after silence | Message sent/received | 🟡 Timing |
+| Packet size variation | Text vs media vs voice | 🟡 Content type |
+| Server IP geo | Approximate location | 🔴 Infra leak |
+| WebSocket frame count | Number of messages | 🟡 Activity |
+
+### MCP server integration (optional)
+
+- **RAMparts** (highflame-ai): Rust MCP scanner for server vulnerabilities — `git clone` + `cargo build --release` (npx often fails on repos without package.json)
+- **AI-Infra-Guard** (Tencent, 4.3k⭐): full-stack AI red-teaming platform
+- **Lamda** (firerpa): Android MITM/Frida — requires ADB device
+
 ## Related Skills
 
 - **network-protocol-analysis** — PCAP forensics foundation (extract flows, timing, protocols before running protocol-specific analysis)
-- **crypto-protocol-analysis** — Cryptographic primitives (X3DH, Double Ratchet, Noise) that underpin all E2E messaging
 - **anonymization-protocol-analysis** — How Tor/I2P/mixnets compare on metadata leakage vs WhatsApp/Signal
 
 ## Reference Files
 
 - `references/dns-leak-findings.md` — Verified DNS leak results: `v.whatsapp.net`, `signal.org`, `matrix.org` visible in plaintext queries. Includes domain-to-application mapping table and detection script.
+- `references/side-channel-timing.md` — Timing side-channels in Double Ratchet implementations (DH ops ~1ms vs symmetric ~1μs). Attack model and measurement script with X25519.
+- `references/p53-deployment-guide.md` — Full P53 deployment setup for raw capture + analysis.
 
 ## Scripts
 
@@ -257,6 +355,7 @@ PoC scripts that implement these techniques (see project working directory):
 - `scripts/analyze_pcap.py` — Full protocol analysis (flows, TLS, DNS, timing)
 - `scripts/timing_attack.py` — Traffic confirmation via flow correlation
 - `scripts/metadata_extract.py` — DNS/SNI/IP metadata leakage extraction
+- `scripts/deploy-to-remote.sh` — One-command stack deploy to P53 (SSH_PASS env)
 
 ## Verification
 
