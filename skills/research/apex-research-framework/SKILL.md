@@ -37,10 +37,11 @@ triggers:
 > Diseñado para producir benchmarks que resistan el escrutinio del 0.01% intelectual global.
 
 NOTA DE INSTALACIÓN (Hermes local): la skill compañera `web-deep-research` (ejecución) NO está
-publicada en el repo mmansillaf/hermes-skills. Adaptar la EJECUCIÓN con las herramientas de
-investigación ya instaladas: `competitive-research-ai-projects` (GitHub/Serper/arXiv/ejecución
-API multi-fuente), web_search/web_extract del toolset `web`, y `research-synthesis-html-preview`
-(producción HTML).
+publicada en el repo mmansillaf/hermes-skills. ACTUALIZADO 2026-08-04: el hueco de ejecución
+está cubierto por `deep-research-paralelo` (ejecución por delegación paralela + validación en
+vivo + verificación cruzada [V]/[E]) + `competitive-research-ai-projects` (GitHub/Serper/arXiv/
+ejecución API multi-fuente) + web_search/web_extract del toolset `web`, y
+`research-synthesis-html-preview` (producción HTML).
 
 ## ¿Qué resuelve?
 
